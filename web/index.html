@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/web/css/style.css">
+</head>
+<body>
+    <div class="form">
+    <!-- <form action="/regist" method="GET"> -->
+        <p>
+            <label for="">用户名</label> 
+            <input type="text" name="username" id="username">
+            </p>
+            <p>
+                <label for="">密码</label> 
+                <input type="text" name="password" id="password">
+            </p>
+            <p class="btns">
+                <button onclick="sendData()">注册</button>
+            </p>
+    <!-- </form> -->
+    </div>
+    <h1 id="result"></h1>
+</body>
+<script>
+    function sendData() {
+        ajax({
+
+        })
+    }
+
+    function ajax(option) {
+        // 适配
+        option = Object.assign({
+            method: 'GET',
+            url: '',
+            data: null,
+            // 是否异步
+            async: true,
+        }, option)
+        // 对data做处理
+        // 如果data是对象要转成query格式
+        if (typeof option.data !== 'string') {
+            // 将data转成字符串
+            let str = '';
+            // 解析对象
+            for (let key in option.data) {
+                str += '&' + key + '=' + option.data[key]
+            } 
+            // 更新data字符串
+            option.data = str.slice(1)
+        }
+        // 如果是get请求，不能提交data，数据应该放在url上
+        if (option.method.toUpperCase() === "GET") {
+            // 没有请求体，数据要放在url上
+            option.url += '?' + option.data;
+            // 请求体不需要提交数据了
+            option.data = null;
+        }
+        // 返回promise对象
+        return new Promise((resolve, reject) => {
+            // 创建xhr
+            let xhr;
+            if (window.XMLHttpRequest) {
+                // 标准浏览器
+                xhr = new XMLHttpRequest();
+            } else if (window.ActiveXObject) {
+                // IE浏览器
+                xhr = new ActiveXObject();
+            } else {
+                return reject('不支持ajax')
+            }
+            // 监听状态
+            xhr.onreadystatechange = function() {
+                // 监听数据返回
+                if (xhr.readyState === 4) {
+                    // 判断状态码
+                    if (xhr.status === 200 || xhr.status === 304) {
+                        // 数据返回了
+                        resolve(JSON.parse(xhr.responseText))
+                    }
+                }
+            }
+            // 打开连接
+            xhr.open(option.method, option.url, option.async);
+            // 如果传递了请求头，修改请求头
+            if (option.headers) {
+                // 遍历每一项
+                for (let key in option.headers) {
+                    // 修改请求头
+                    xhr.setRequestHeader(key, option.headers[key])
+                }
+            }
+            // 发送请求
+            xhr.send(option.data)
+        })
+    }
+    // function sendData() {
+    //     let username = document.getElementById('username').value;
+    //     let password = document.getElementById('password').value;
+    //     let result = document.getElementById('result')
+    //     let xhr;
+    //     if(window.XMLHttpRequest) {
+    //         xhr = new XMLHttpRequest();
+    //     } else if(window.ActiveXObject) {
+    //         xhr = new ActiveXObject();
+    //     } else {
+    //         alert('您的浏览器不支持ajax')
+    //     }
+    //     console.log(xhr)
+    //     xhr.onreadystatechange = function() {
+    //         if(xhr.readyState === 4) {
+    //             if(xhr.status === 200 || xhr.status === 304) {
+    //                 let res = JSON.parse(xhr.responseText)
+    //                 result.innerHTML = `${res.name} -- ${res.age}`
+    //             }
+    //         }
+    //     }
+    //     xhr.open('GET', '/regist?color=red&num=11', true);
+    //     xhr.send(null)
+    // }   
+</script>
+</html>

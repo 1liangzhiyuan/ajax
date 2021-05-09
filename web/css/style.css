@@ -1,0 +1,21 @@
+.form,
+form {
+    width: 600px;
+    border: 1px solid #000;
+    margin: 20px auto;
+    padding: 30px;
+}
+label {
+    display: inline-block;
+    width: 200px;
+    text-align: right;
+    margin-right: 20px;
+}
+input {
+    padding: 8px 10px;
+    width: 300px;
+}
+.btns {
+    text-align: center;
+    padding: 30px 40px;
+}
